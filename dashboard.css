@@ -1,0 +1,155 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Inter', sans-serif;
+}
+
+:root {
+    --bg: #f3f6fb;
+    --card: #ffffff;
+    --primary: #4f83ff;
+    --text: #1f2937;
+    --muted: #6b7280;
+    --border: #e5e7eb;
+}
+
+body {
+    background: var(--bg);
+    color: var(--text);
+}
+
+/* NAVBAR */
+.navbar_dash {
+    height: 70px;
+    background: linear-gradient(90deg, #243b55, #141e30);
+    color: white;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 40px;
+}
+
+.logo {
+    font-size: 22px;
+}
+
+.logo span {
+    color: #6ea8ff;
+}
+
+.user_area {
+    font-size: 14px;
+}
+
+.logout {
+    margin-left: 5px;
+    color: #ff6b6b;
+    cursor: pointer;
+}
+
+#separator {
+    margin: 0 2px;
+    color: #888;
+}
+
+/* MAIN */
+.main_dash {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+    padding: 40px;
+}
+
+/* CARDS */
+.card {
+    background: var(--card);
+    border-radius: 12px;
+    padding: 25px;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.08);
+}
+
+/* ADD TASK */
+.add_task {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.add_task input {
+    flex: 1;
+    padding: 12px 14px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    font-size: 15px;
+}
+
+.add_task button {
+    width: 45px;
+    border: none;
+    border-radius: 8px;
+    background: var(--primary);
+    color: white;
+    font-size: 22px;
+    cursor: pointer;
+}
+
+/* TASK LIST */
+#taskList {
+    list-style: none;
+}
+
+.task {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px;
+    border-bottom: 1px solid var(--border);
+}
+
+.task_left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.task.done span {
+    text-decoration: line-through;
+    color: var(--muted);
+}
+
+.task_actions {
+    display: flex;
+    gap: 12px;
+}
+
+.task_actions i {
+    cursor: pointer;
+    font-style: normal;
+    color: var(--muted);
+}
+
+.task_actions i.delete {
+    color: #e74c3c;
+}
+
+/* EMPTY CARD */
+.empty_card {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: auto;
+}
+
+.empty_card img {
+    max-width: 220px;
+    margin-bottom: 20px;
+}
+
+.empty_card p {
+    color: var(--muted);
+    padding: auto;
+}

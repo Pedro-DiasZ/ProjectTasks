@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>MyTasks</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="dashboard.css">
+</head>
+<body>
+
+<nav class="navbar_dash">
+    <h1 class="logo">My<span>Tasks</span></h1>
+
+    <div class="user_area">
+     <span id="username"></span>
+     <span id="separator">|</span>
+        <span class="logout" onclick="logoutUser()">Sair</span>
+
+    </div>
+</nav>
+
+
+<main class="main_dash">
+
+    <!-- CARD TAREFAS -->
+    <section class="card tasks_card">
+        <div class="add_task">
+            <input type="text" id="taskInput" placeholder="O que você precisa fazer hoje?">
+            <button id="addTaskBtn">+</button>
+        </div>
+
+        <ul id="taskList">
+            <!-- tarefas entram aqui -->
+        </ul>
+    </section>
+
+    <!-- CARD VAZIO -->
+    <section class="card empty_card">
+        <p>
+            <strong>Tudo limpo por aqui!</strong><br>
+            Adicione uma nova tarefa.
+        </p>
+    </section>
+
+</main>
+
+<script src="dashboard.js"></script>
+</body>
+</html>

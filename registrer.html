@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registre-se!</title>
+    <link rel="stylesheet" href="registrer.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div id="switch" onclick="togglemode()">
+        <button>
+        </button>
+        <span></span>
+    </div>
+
+    <div class="container">
+        <h1 id="login">Registrer Session</h1>
+
+        <div class="login_card">
+            <label for="user">Nome do seu usuario</label>
+            <input type="text" id="user" placeholder="Digite o nome do seu usuario">
+
+            <label for="password">Senha</label>
+            <input type="password" id="password" placeholder="Digite a sua senha">
+
+             <label for="confirm-password">Confirme sua Senha</label>
+            <input type="password" id="confirm-password" placeholder="Confirme a sua senha">
+
+            <button type="submit" onclick="registerUser()">Registrar</button>
+        </div>
+       </div>
+<script src="registrer.js"></script>
+</body>
+</html>
