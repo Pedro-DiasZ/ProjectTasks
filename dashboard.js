@@ -46,7 +46,7 @@ function addTask() {
 }
 
 function logoutUser() {
-    window.location.href = 'login.html';
+    window.location.href = 'index.html';
 }
 
 function usernameDisplay() {
