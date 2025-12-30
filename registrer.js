@@ -12,7 +12,7 @@ function registerUser() {
 
     localStorage.setItem(StorageKey, user);
     localStorage.setItem("passwordStorage", password);
-    window.location.href = 'login.html';
+    window.location.href = 'index.html';
 
 }
 
