@@ -88,14 +88,17 @@ btn.addEventListener('click', createTask);
 
 async function createTask() {
     if (input.value.trim() === '') return;
+    const user = localStorage.getItem('loginStorage'); // Pega o usuário atual
 
     try {
         const response = await fetch(`${API_URL}/tasks`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ title: input.value })
+            body: JSON.stringify({ 
+                title: input.value,
+                user: user // Envia o dono da tarefa
+            })
         });
-
         const task = await response.json();
         renderTask(task);
         input.value = '';
