@@ -3,7 +3,6 @@ const btn = document.getElementById('addTaskBtn');
 const list = document.getElementById('taskList');
 
 function logoutUser() {
-    localStorage.removeItem('loginStorage');
     window.location.href = 'index.html'; 
 }
 
