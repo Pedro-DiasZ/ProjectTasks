@@ -1,21 +1,33 @@
 const input = document.getElementById('taskInput');
 const btn = document.getElementById('addTaskBtn');
 const list = document.getElementById('taskList');
-const logout = document.getElementById('logout');
 
+const API_URL = 'https://projecttasks.onrender.com';
 
-btn.addEventListener('click', addTask);
+async function loadTasks() {
+    try {
+        const response = await fetch(`${API_URL}/tasks`);
+        const tasks = await response.json();
 
-function addTask() {
-    if (input.value.trim() === '') return;
+        list.innerHTML = '';
 
+        tasks.forEach(task => {
+            renderTask(task);
+        });
+    } catch (error) {
+        console.error('Erro ao carregar tarefas:', error);
+    }
+}
+
+function renderTask(task) {
     const li = document.createElement('li');
     li.classList.add('taskList');
+    if (task.completed) li.classList.add('done');
 
     li.innerHTML = `
         <div class="task_left">
-            <input type="checkbox">
-            <span>${input.value}</span>
+            <input type="checkbox" ${task.completed ? 'checked' : ''}>
+            <span>${task.title}</span>
         </div>
         <div class="task_actions">
             <i class="edit">Edit</i>
@@ -23,44 +35,82 @@ function addTask() {
         </div>
     `;
 
-    // marcar como concluída
-    li.querySelector('input').addEventListener('change', e => {
-        li.classList.toggle('done', e.target.checked);
+    li.querySelector('input').addEventListener('change', async (e) => {
+        try {
+            await fetch(`${API_URL}/tasks/${task.id}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ completed: e.target.checked })
+            });
+
+            li.classList.toggle('done', e.target.checked);
+        } catch (error) {
+            console.error('Erro ao atualizar tarefa:', error);
+        }
     });
 
-    // deletar
-    li.querySelector('.delete').addEventListener('click', () => {
-        li.remove();
+    li.querySelector('.delete').addEventListener('click', async () => {
+        try {
+            await fetch(`${API_URL}/tasks/${task.id}`, {
+                method: 'DELETE'
+            });
+            li.remove();
+        } catch (error) {
+            console.error('Erro ao deletar tarefa:', error);
+        }
     });
 
-    // editar
-    li.querySelector('.edit').addEventListener('click', () => {
-        const newTask = prompt('Edit task:', input.value);
-        if (newTask !== null && newTask.trim() !== '') {
-            li.querySelector('span').textContent = newTask;
+    li.querySelector('.edit').addEventListener('click', async () => {
+        const newTitle = prompt('Editar tarefa:', task.title);
+        if (!newTitle || newTitle.trim() === '') return;
+
+        try {
+            await fetch(`${API_URL}/tasks/${task.id}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ title: newTitle })
+            });
+
+            li.querySelector('span').textContent = newTitle;
+        } catch (error) {
+            console.error('Erro ao editar tarefa:', error);
         }
     });
 
     list.appendChild(li);
-    input.value = '';
 }
 
-function logoutUser() {
-    window.location.href = 'index.html';
+btn.addEventListener('click', createTask);
+
+async function createTask() {
+    if (input.value.trim() === '') return;
+
+    try {
+        const response = await fetch(`${API_URL}/tasks`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ title: input.value })
+        });
+
+        const task = await response.json();
+        renderTask(task);
+        input.value = '';
+    } catch (error) {
+        console.error('Erro ao criar tarefa:', error);
+    }
 }
 
 function usernameDisplay() {
     const user = localStorage.getItem('loginStorage');
-
     if (user) {
         const username = document.getElementById('username');
-        username.textContent = `Olá, ${user}`;
+        if (username) {
+            username.textContent = `Olá, ${user}`;
+        }
     }
 }
 
-document.addEventListener('DOMContentLoaded', usernameDisplay);
-
-
-
-
-
+document.addEventListener('DOMContentLoaded', () => {
+    usernameDisplay();
+    loadTasks();
+});
