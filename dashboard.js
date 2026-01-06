@@ -2,6 +2,11 @@ const input = document.getElementById('taskInput');
 const btn = document.getElementById('addTaskBtn');
 const list = document.getElementById('taskList');
 
+function logoutUser() {
+    localStorage.removeItem('loginStorage');
+    window.location.href = 'index.html'; 
+}
+
 const API_URL = 'https://projecttasks.onrender.com';
 
 async function loadTasks() {
