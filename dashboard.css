@@ -24,7 +24,6 @@ body {
     height: 70px;
     background: linear-gradient(90deg, #243b55, #141e30);
     color: white;
-
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -93,6 +92,11 @@ body {
     color: white;
     font-size: 22px;
     cursor: pointer;
+    transition: background 0.3s;
+}
+
+.add_task button:hover {
+    background: #3d6fd9;
 }
 
 /* TASK LIST */
@@ -112,6 +116,14 @@ body {
     display: flex;
     align-items: center;
     gap: 10px;
+    flex: 1;
+    min-width: 0;
+}
+
+.task_left span {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .task.done span {
@@ -122,12 +134,18 @@ body {
 .task_actions {
     display: flex;
     gap: 12px;
+    flex-shrink: 0;
 }
 
 .task_actions i {
     cursor: pointer;
     font-style: normal;
     color: var(--muted);
+    transition: color 0.3s;
+}
+
+.task_actions i:hover {
+    color: var(--text);
 }
 
 .task_actions i.delete {
@@ -152,4 +170,139 @@ body {
 .empty_card p {
     color: var(--muted);
     padding: auto;
+}
+
+/* ===================================
+   RESPONSIVIDADE MOBILE
+   =================================== */
+
+/* Tablets e telas médias */
+@media (max-width: 768px) {
+    .main_dash {
+        grid-template-columns: 1fr;
+        gap: 20px;
+        padding: 20px;
+    }
+    
+    .navbar_dash {
+        padding: 0 20px;
+    }
+    
+    .logo {
+        font-size: 18px;
+    }
+    
+    .user_area {
+        font-size: 13px;
+    }
+}
+
+/* Smartphones */
+@media (max-width: 480px) {
+    .navbar_dash {
+        height: 60px;
+        padding: 0 15px;
+        flex-wrap: wrap;
+    }
+    
+    .logo {
+        font-size: 16px;
+    }
+    
+    .user_area {
+        font-size: 12px;
+    }
+    
+    #separator {
+        display: none;
+    }
+    
+    .main_dash {
+        padding: 15px;
+        gap: 15px;
+    }
+    
+    .card {
+        padding: 20px 15px;
+        border-radius: 10px;
+    }
+    
+    .add_task {
+        flex-direction: column;
+        gap: 8px;
+    }
+    
+    .add_task input {
+        width: 100%;
+        font-size: 14px;
+        padding: 10px 12px;
+    }
+    
+    .add_task button {
+        width: 100%;
+        height: 45px;
+    }
+    
+    .task {
+        padding: 10px 8px;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+    
+    .task_left {
+        flex: 1;
+        min-width: 60%;
+    }
+    
+    .task_left span {
+        font-size: 14px;
+        white-space: normal;
+        word-break: break-word;
+    }
+    
+    .task_actions {
+        gap: 15px;
+    }
+    
+    .task_actions i {
+        font-size: 16px;
+        padding: 5px;
+    }
+    
+    .empty_card img {
+        max-width: 180px;
+        margin-bottom: 15px;
+    }
+    
+    .empty_card p {
+        font-size: 14px;
+    }
+}
+
+/* Telas muito pequenas */
+@media (max-width: 360px) {
+    .navbar_dash {
+        height: auto;
+        min-height: 60px;
+        padding: 10px;
+    }
+    
+    .logo {
+        font-size: 14px;
+    }
+    
+    .user_area {
+        font-size: 11px;
+        width: 100%;
+        text-align: right;
+        margin-top: 5px;
+    }
+    
+    .card {
+        padding: 15px 10px;
+    }
+    
+    .task_left span {
+        font-size: 13px;
+    }
 }
