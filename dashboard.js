@@ -2,6 +2,18 @@ const input = document.getElementById('taskInput');
 const btn = document.getElementById('addTaskBtn');
 const list = document.getElementById('taskList');
 
+function togglemode() {
+    const html = document.documentElement;
+    html.classList.toggle("dark");
+
+    if (html.classList.contains("dark")) {
+        localStorage.setItem("theme", "dark");
+    } else {
+        localStorage.setItem("theme", "light");
+    }
+}
+
+
 function logoutUser() {
     window.location.href = 'index.html'; 
 }
