@@ -78,5 +78,4 @@ def index():
     return "Task Management API is running."
 
 if __name__ == '__main__':
-    # Em produção (Render), o Gunicorn ignora isso, mas ajuda no teste local
     app.run(debug=True)
