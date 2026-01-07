@@ -32,14 +32,12 @@ const API_URL = 'https://projecttasks.onrender.com';
 
 async function loadTasks() {
     try {
-        const response = await fetch(`${API_URL}/tasks`);
+        const user = localStorage.getItem('loginStorage');
+        const response = await fetch(`${API_URL}/tasks?user=${user}`);
         const tasks = await response.json();
 
         list.innerHTML = '';
-
-        tasks.forEach(task => {
-            renderTask(task);
-        });
+        tasks.forEach(task => renderTask(task));
     } catch (error) {
         console.error('Erro ao carregar tarefas:', error);
     }
@@ -110,7 +108,7 @@ btn.addEventListener('click', createTask);
 
 async function createTask() {
     if (input.value.trim() === '') return;
-    const user = localStorage.getItem('loginStorage'); // Pega o usuário atual
+    const user = localStorage.getItem('loginStorage'); //
 
     try {
         const response = await fetch(`${API_URL}/tasks`, {
@@ -118,9 +116,10 @@ async function createTask() {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ 
                 title: input.value,
-                user: user // Envia o dono da tarefa
+                user: user
             })
         });
+
         const task = await response.json();
         renderTask(task);
         input.value = '';
