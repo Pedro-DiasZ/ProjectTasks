@@ -67,6 +67,7 @@ body {
     background-image: var(--bg-image);
     background-size: cover;
     background-position: center;
+    transition: background-image 0.5s ease;
 }
 
 /* =========================
@@ -94,6 +95,7 @@ body {
     border-radius: 20px;
     border: 1px solid var(--border-color);
     box-shadow: 0 8px 32px var(--shadow-strong);
+    transition: background 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease;
 }
 
 /* =========================
@@ -104,6 +106,7 @@ body {
     margin-top: 40px;
     margin-bottom: 40px;
     font-weight: 600;
+    transition: color 0.3s ease;
 }
 
 /* =========================
@@ -121,12 +124,15 @@ body {
     border-radius: 16px;
 
     box-shadow: 0 4px 16px var(--shadow-soft);
+    transition: background-color 0.4s ease, box-shadow 0.4s ease;
+    
 }
 
 .login_card label {
     color: var(--text-color);
     font-size: 14px;
     opacity: 0.85;
+    transition: color 0.3s ease;
 }
 
 .login_card input {
@@ -139,10 +145,12 @@ body {
     background: var(--input-bg);
     color: var(--text-color);
     outline: none;
+    transition: background 0.3s ease, border-color 0.3s ease, color 0.3s ease;
 }
 
 .login_card input::placeholder {
     color: rgba(255, 255, 255, 0.6);
+    transition: color 0.3s ease;
 }
 
 .login_card input:focus {
@@ -165,7 +173,7 @@ body {
 
     font-weight: 600;
     cursor: pointer;
-    transition: 0.3s;
+    transition: background 0.3s ease, color 0.3s ease, transform 0.2s ease;
 }
 
 .login_card button:hover {
@@ -180,6 +188,7 @@ body {
     color: var(--text-color);
     font-size: 20px;
     cursor: pointer;
+    transition: color 0.3s ease, opacity 0.3s ease;
 }
 
 #switch {
@@ -206,6 +215,7 @@ body {
     z-index: 1;
 
     animation: slide-out 0.4s forwards;
+    transition: background 0.3s ease, outline 0.3s ease;
 }
 
 #switch span {
@@ -220,6 +230,7 @@ body {
     -webkit-backdrop-filter: blur(4px);
 
     border-radius: 9999px;
+    transition: background 0.3s ease, border-color 0.3s ease;
 }
 
 #switch button:hover {
