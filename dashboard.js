@@ -54,8 +54,8 @@ function renderTask(task) {
             <span>${task.title}</span>
         </div>
         <div class="task_actions">
-            <i class="edit">Edit</i>
-            <i class="delete">Remove</i>
+            <i class="edit"><img src="./assets/edicao.png" alt="Editar"></i>
+            <i class="delete"><img src="./assets/lixeira.png" alt="Excluir"></i>
         </div>
     `;
 
