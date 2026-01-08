@@ -220,6 +220,15 @@ body {
     list-style: none;
 }
 
+.taskList {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px;
+    border-bottom: 1px solid var(--border);
+    transition: border-color 0.3s ease;
+}
+
 .task {
     display: flex;
     align-items: center;
@@ -232,9 +241,8 @@ body {
 .task_left {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 12px;
     flex: 1;
-    min-width: 0;
 }
 
 .task_left span {
@@ -250,25 +258,55 @@ body {
     color: var(--muted);
 }
 
+.taskList.done span {
+    text-decoration: line-through;
+    color: var(--muted);
+}
+
 .task_actions {
     display: flex;
     gap: 12px;
     flex-shrink: 0;
+    margin-bottom: 2px;
 }
 
 .task_actions i {
     cursor: pointer;
     font-style: normal;
     color: var(--muted);
-    transition: color 0.3s;
+    transition: color 0.3s
 }
 
 .task_actions i:hover {
     color: var(--text);
 }
 
+.task_actions i.edit {
+    border: var(--muted) 1px solid;
+    border-radius: 2px;
+    background-color: var(--muted);
+    width: 16px;
+    height: 16px;
+}
+
+.task_actions i.edit img {
+    width: 14px;
+    height: 14px;
+    
+}
+
 .task_actions i.delete {
     color: var(--delete-color);
+    border: var(--delete-color) 1px solid;
+    border-radius: 2px;
+    background-color: var(--delete-color);
+    width: 16px;
+    height: 16px;
+}
+
+.task_actions i.delete img {
+    width: 14px;
+    height: 14px;
 }
 
 /* EMPTY CARD */
@@ -371,13 +409,21 @@ body {
     
     .task {
         padding: 10px 8px;
-        flex-wrap: wrap;
+        flex-wrap: nowrap;
         gap: 8px;
+        align-items: center;
+    }
+    
+    .taskList {
+        padding: 10px 8px;
+        flex-wrap: nowrap;
+        gap: 8px;
+        align-items: center;
     }
     
     .task_left {
         flex: 1;
-        min-width: 60%;
+        min-width: 0;
     }
     
     .task_left span {
@@ -387,7 +433,14 @@ body {
     }
     
     .task_actions {
-        gap: 15px;
+        gap: 8px;
+        flex-shrink: 0;
+        margin-left: auto;
+    }
+
+    .task_actions .edit i {
+        font-size: 16px;
+        
     }
     
     .task_actions i {
