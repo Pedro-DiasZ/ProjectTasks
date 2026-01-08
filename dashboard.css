@@ -433,19 +433,27 @@ body {
     }
     
     .task_actions {
+        display: flex;
         gap: 8px;
         flex-shrink: 0;
         margin-left: auto;
+        margin-bottom: 0;
+        align-items: center;
+    }
+    .task_actions i {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 32px;
+        height: 32px;
+        padding: 0;
+        background-clip: padding-box;
     }
 
-    .task_actions .edit i {
-        font-size: 16px;
-        
-    }
-    
-    .task_actions i {
-        font-size: 16px;
-        padding: 5px;
+    .task_actions i img {
+        width: 16px;
+        height: 16px;
+        display: block;
     }
     
     .empty_card img {
