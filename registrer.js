@@ -1,24 +1,50 @@
-const StorageKey = "loginStorage"; "passwordStorage";
+const API_URL = 'https://projecttasks.onrender.com';
 
-function registerUser() {
-    const user = document.getElementById('user').value;
+async function registerUser() {
+    const user = document.getElementById('user').value.trim();
     const password = document.getElementById('password').value;
     const confirmPassword = document.getElementById('confirm-password').value;
 
-    if (password !== confirmPassword) {
-        alert("As senhas não coincidem.");
+    // Validações
+    if (!user || !password) {
+        alert('Preencha todos os campos.');
         return;
     }
 
-    localStorage.setItem(StorageKey, user);
-    localStorage.setItem("passwordStorage", password);
-    window.location.href = 'index.html';
+    if (password !== confirmPassword) {
+        alert('As senhas não coincidem.');
+        return;
+    }
 
+    if (password.length < 6) {
+        alert('Senha deve ter no mínimo 6 caracteres.');
+        return;
+    }
+
+    try {
+        const response = await fetch(`${API_URL}/register`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                username: user,
+                senha: password
+            })
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            alert(data.error || 'Erro ao registrar usuário.');
+            return;
+        }
+
+        alert('Registrado com sucesso! Faça login agora.');
+        window.location.href = 'index.html';
+    } catch (error) {
+        console.error('Erro ao registrar:', error);
+        alert('Erro de conexão. Tente novamente.');
+    }
 }
-
-
-
-
 
 
 function togglemode() {
