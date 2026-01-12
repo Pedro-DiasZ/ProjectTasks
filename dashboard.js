@@ -25,17 +25,44 @@ window.addEventListener('DOMContentLoaded', () => {
 
 
 function logoutUser() {
+    localStorage.removeItem('token');
+    localStorage.removeItem('loginStorage');
     window.location.href = 'index.html'; 
 }
 
 const API_URL = 'https://projecttasks.onrender.com';
 
+// Função helper para adicionar token em todas as requisições
+function getAuthHeaders() {
+    const token = localStorage.getItem('token');
+    return {
+        'Content-Type': 'application/json',
+        ...(token && { 'Authorization': `Bearer ${token}` })
+    };
+}
+
+// Função para verificar autenticação
+function checkAuth(response) {
+    if (response.status === 401) {
+        localStorage.removeItem('token');
+        localStorage.removeItem('loginStorage');
+        window.location.href = 'index.html';
+    }
+    return response;
+}
+
+
 async function loadTasks() {
     try {
-        const user = localStorage.getItem('loginStorage');
-        const response = await fetch(`${API_URL}/tasks?user=${user}`);
+        const response = await fetch(`${API_URL}/tasks`, {
+            headers: getAuthHeaders()
+        });
+        
+        checkAuth(response);
+        
+        if (!response.ok) throw new Error('Erro ao carregar tarefas');
+        
         const tasks = await response.json();
-
         list.innerHTML = '';
         tasks.forEach(task => renderTask(task));
     } catch (error) {
@@ -61,12 +88,13 @@ function renderTask(task) {
 
     li.querySelector('input').addEventListener('change', async (e) => {
         try {
-            await fetch(`${API_URL}/tasks/${task.id}`, {
+            const response = await fetch(`${API_URL}/tasks/${task.id}`, {
                 method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
+                headers: getAuthHeaders(),
                 body: JSON.stringify({ completed: e.target.checked })
             });
 
+            checkAuth(response);
             li.classList.toggle('done', e.target.checked);
         } catch (error) {
             console.error('Erro ao atualizar tarefa:', error);
@@ -75,9 +103,12 @@ function renderTask(task) {
 
     li.querySelector('.delete').addEventListener('click', async () => {
         try {
-            await fetch(`${API_URL}/tasks/${task.id}`, {
-                method: 'DELETE'
+            const response = await fetch(`${API_URL}/tasks/${task.id}`, {
+                method: 'DELETE',
+                headers: getAuthHeaders()
             });
+
+            checkAuth(response);
             li.remove();
         } catch (error) {
             console.error('Erro ao deletar tarefa:', error);
@@ -89,12 +120,13 @@ function renderTask(task) {
         if (!newTitle || newTitle.trim() === '') return;
 
         try {
-            await fetch(`${API_URL}/tasks/${task.id}`, {
+            const response = await fetch(`${API_URL}/tasks/${task.id}`, {
                 method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
+                headers: getAuthHeaders(),
                 body: JSON.stringify({ title: newTitle })
             });
 
+            checkAuth(response);
             li.querySelector('span').textContent = newTitle;
         } catch (error) {
             console.error('Erro ao editar tarefa:', error);
@@ -108,18 +140,20 @@ btn.addEventListener('click', createTask);
 
 async function createTask() {
     if (input.value.trim() === '') return;
-    const user = localStorage.getItem('loginStorage'); //
 
     try {
         const response = await fetch(`${API_URL}/tasks`, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: getAuthHeaders(),
             body: JSON.stringify({ 
-                title: input.value,
-                user: user
+                title: input.value
             })
         });
 
+        checkAuth(response);
+        
+        if (!response.ok) throw new Error('Erro ao criar tarefa');
+        
         const task = await response.json();
         renderTask(task);
         input.value = '';
