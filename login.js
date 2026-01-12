@@ -25,16 +25,42 @@ window.addEventListener('DOMContentLoaded', () => {
 
 
 
-function loginUser() {
-    const user = document.getElementById('user').value;
+const API_URL = 'https://projecttasks.onrender.com';
+
+async function loginUser() {
+    const user = document.getElementById('user').value.trim();
     const password = document.getElementById('password').value;
 
-    const storedUser = localStorage.getItem("loginStorage");
-    const storedPassword = localStorage.getItem("passwordStorage");
+    // Validações
+    if (!user || !password) {
+        alert('Preencha usuário e senha.');
+        return;
+    }
 
-    if (user === storedUser && password === storedPassword) {
+    try {
+        const response = await fetch(`${API_URL}/login`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                username: user,
+                senha: password
+            })
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            alert(data.error || 'Usuário ou senha incorretos.');
+            return;
+        }
+
+        // Armazena token e nome de usuário
+        localStorage.setItem('token', data.access_token);
+        localStorage.setItem('loginStorage', user);
+        
         window.location.href = 'dashboard.html';
-    } else {
-        alert("Usuário ou senha incorretos.");
+    } catch (error) {
+        console.error('Erro ao fazer login:', error);
+        alert('Erro de conexão. Tente novamente.');
     }
 }
