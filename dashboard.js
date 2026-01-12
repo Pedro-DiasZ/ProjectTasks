@@ -47,6 +47,7 @@ function checkAuth(response) {
         localStorage.removeItem('token');
         localStorage.removeItem('loginStorage');
         window.location.href = 'index.html';
+        throw new Error('Token expirado. Redirecionando para login...');
     }
     return response;
 }
@@ -54,15 +55,33 @@ function checkAuth(response) {
 
 async function loadTasks() {
     try {
+        const token = localStorage.getItem('token');
+        if (!token) {
+            console.warn('Sem token. Redirecionando para login...');
+            window.location.href = 'index.html';
+            return;
+        }
+
         const response = await fetch(`${API_URL}/tasks`, {
             headers: getAuthHeaders()
         });
         
-        checkAuth(response);
+        if (response.status === 401) {
+            localStorage.removeItem('token');
+            localStorage.removeItem('loginStorage');
+            window.location.href = 'index.html';
+            return;
+        }
         
-        if (!response.ok) throw new Error('Erro ao carregar tarefas');
+        if (!response.ok) throw new Error(`Erro ao carregar tarefas: ${response.status}`);
         
         const tasks = await response.json();
+        
+        if (!Array.isArray(tasks)) {
+            console.error('Resposta não é um array:', tasks);
+            throw new Error('Formato de resposta inválido');
+        }
+        
         list.innerHTML = '';
         tasks.forEach(task => renderTask(task));
     } catch (error) {
@@ -142,7 +161,7 @@ async function createTask() {
     if (input.value.trim() === '') return;
 
     try {
-        const taskTitle = input.value; // ← Salva antes de limpar
+        const taskTitle = input.value;
         const response = await fetch(`${API_URL}/tasks`, {
             method: 'POST',
             headers: getAuthHeaders(),
@@ -151,16 +170,28 @@ async function createTask() {
             })
         });
 
-        checkAuth(response);
+        // Verificar erro 401
+        if (response.status === 401) {
+            console.error('Token inválido ou expirado!');
+            localStorage.removeItem('token');
+            localStorage.removeItem('loginStorage');
+            alert('Sua sessão expirou. Faça login novamente.');
+            window.location.href = 'index.html';
+            return;
+        }
         
-        if (!response.ok) throw new Error('Erro ao criar tarefa');
+        if (!response.ok) {
+            const error = await response.json();
+            throw new Error(error.error || `Erro ao criar tarefa: ${response.status}`);
+        }
         
         const task = await response.json();
-        console.log('Tarefa criada:', task); // ← Debug
+        console.log('Tarefa criada com sucesso:', task);
         
-        if (!task.title) {
-            console.error('Erro: tarefa sem título!', task);
-            alert('Erro ao criar tarefa: título não foi salvo');
+        // Validar que a tarefa tem título
+        if (!task || !task.title) {
+            console.error('Resposta inválida do servidor:', task);
+            alert('Erro: servidor retornou tarefa sem título');
             return;
         }
         
@@ -168,6 +199,7 @@ async function createTask() {
         input.value = '';
     } catch (error) {
         console.error('Erro ao criar tarefa:', error);
+        alert('Erro ao criar tarefa: ' + error.message);
     }
 }
 
