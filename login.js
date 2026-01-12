@@ -1,5 +1,3 @@
-
-
 function togglemode() {
     const html = document.documentElement;
     html.classList.toggle("dark");
@@ -50,13 +48,26 @@ async function loginUser() {
         const data = await response.json();
 
         if (!response.ok) {
+            console.error('Erro no login:', data);
             alert(data.error || 'Usuário ou senha incorretos.');
+            return;
+        }
+
+        console.log('Login bem-sucedido!', data);
+        
+        // Validar se o token foi retornado
+        if (!data.access_token) {
+            console.error('Servidor não retornou token:', data);
+            alert('Erro: servidor não retornou token de autenticação');
             return;
         }
 
         // Armazena token e nome de usuário
         localStorage.setItem('token', data.access_token);
         localStorage.setItem('loginStorage', user);
+        
+        console.log('Token salvo:', localStorage.getItem('token'));
+        console.log('Usuário salvo:', localStorage.getItem('loginStorage'));
         
         window.location.href = 'dashboard.html';
     } catch (error) {
