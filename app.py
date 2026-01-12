@@ -3,6 +3,7 @@ from flask_cors import CORS
 from models import db, Task, User
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity
+from datetime import timedelta
 
 app = Flask(__name__)
 
@@ -16,6 +17,7 @@ CORS(app, resources={
 })
 
 app.config['JWT_SECRET_KEY'] = 'sua-chave-secreta-aqui'
+app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(hours=24)  # Token válido por 24h
 jwt = JWTManager(app)
 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///tasks.db'
@@ -128,6 +130,19 @@ def login():
             'username': user.username
         }
     }), 200
+    
+# jtw resources
+@jwt.unauthorized_loader
+def unauthorized_callback(error):
+    return jsonify({'error': 'Missing or invalid token'}), 401
+
+@jwt.invalid_token_loader
+def invalid_token_callback(error):
+    return jsonify({'error': 'Invalid token'}), 422
+
+@jwt.expired_token_loader
+def expired_token_callback(jwt_header, jwt_payload):
+    return jsonify({'error': 'Token has expired'}), 401
 
 
 if __name__ == '__main__':
