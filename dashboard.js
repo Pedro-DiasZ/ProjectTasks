@@ -142,11 +142,12 @@ async function createTask() {
     if (input.value.trim() === '') return;
 
     try {
+        const taskTitle = input.value; // ← Salva antes de limpar
         const response = await fetch(`${API_URL}/tasks`, {
             method: 'POST',
             headers: getAuthHeaders(),
             body: JSON.stringify({ 
-                title: input.value
+                title: taskTitle
             })
         });
 
@@ -155,6 +156,14 @@ async function createTask() {
         if (!response.ok) throw new Error('Erro ao criar tarefa');
         
         const task = await response.json();
+        console.log('Tarefa criada:', task); // ← Debug
+        
+        if (!task.title) {
+            console.error('Erro: tarefa sem título!', task);
+            alert('Erro ao criar tarefa: título não foi salvo');
+            return;
+        }
+        
         renderTask(task);
         input.value = '';
     } catch (error) {
