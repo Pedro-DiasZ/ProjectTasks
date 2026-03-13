@@ -13,6 +13,7 @@ class User(db.Model):
     tasks = db.relationship('Task', backref='user', lazy=True)
     
     def verify_password(self, password):
+        """Verifica se a senha fornecida está correta"""
         return check_password_hash(self.senha, password)
 
 
