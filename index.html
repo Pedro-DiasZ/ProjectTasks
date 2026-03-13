@@ -1,37 +1,37 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login | Tela inicial</title>
+    <title>Login | MyTasks</title>
 
     <link rel="stylesheet" href="style.css">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@200..800&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div id="switch" onclick="togglemode()">
-        <button>
-        </button>
+    <div id="switch" onclick="togglemode()" role="button" aria-label="Alternar tema" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' ') { event.preventDefault(); togglemode(); }">
+        <button></button>
         <span></span>
     </div>
 
-    <div class="container">
-        <h1 id="login">Login Session</h1>
+    <main class="container">
+        <h1 id="login">Entrar</h1>
 
-        <div class="login_card">
-            <label for="user">Usu√°rio</label>
-            <input type="text" id="user" placeholder="Digite seu usu√°rio">
+        <form class="login_card" onsubmit="event.preventDefault(); loginUser();">
+            <label for="user">Usu·rio</label>
+            <input type="text" id="user" placeholder="Digite seu usu·rio" autocomplete="username">
 
             <label for="password">Senha</label>
-            <input type="password" id="password" placeholder="Digite sua senha">
+            <input type="password" id="password" placeholder="Digite sua senha" autocomplete="current-password">
 
-            <button type="submit" onclick="loginUser()">Entrar</button>
-        </div>
-        <footer class="container_footer" onclick="window.location.href='registrer.html'">Cadastre-se</footer>
-    </div>
+            <button type="submit">Entrar</button>
+        </form>
+        <a class="container_footer" href="registrer.html">Criar conta</a>
+    </main>
+
 <script src="login.js"></script>
 </body>
 </html>

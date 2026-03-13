@@ -1,30 +1,30 @@
-const API_URL = 'https://projecttasks.onrender.com';
+const API_URL = "https://projecttasks.onrender.com";
 
 async function registerUser() {
-    const user = document.getElementById('user').value.trim();
-    const password = document.getElementById('password').value;
-    const confirmPassword = document.getElementById('confirm-password').value;
+    const user = document.getElementById("user").value.trim();
+    const password = document.getElementById("password").value;
+    const confirmPassword = document.getElementById("confirm-password").value;
 
-    // ValidaÃ§Ãµes
+    // Validações
     if (!user || !password) {
-        alert('Preencha todos os campos.');
+        alert("Preencha todos os campos.");
         return;
     }
 
     if (password !== confirmPassword) {
-        alert('As senhas nÃ£o coincidem.');
+        alert("As senhas não coincidem.");
         return;
     }
 
     if (password.length < 6) {
-        alert('Senha deve ter no mÃ­nimo 6 caracteres.');
+        alert("Senha deve ter no mínimo 6 caracteres.");
         return;
     }
 
     try {
         const response = await fetch(`${API_URL}/register`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
                 username: user,
                 senha: password
@@ -34,18 +34,17 @@ async function registerUser() {
         const data = await response.json();
 
         if (!response.ok) {
-            alert(data.error || 'Erro ao registrar usuÃ¡rio.');
+            alert(data.error || "Erro ao registrar usuário.");
             return;
         }
 
-        alert('Registrado com sucesso! FaÃ§a login agora.');
-        window.location.href = 'index.html';
+        alert("Registrado com sucesso! Faça login agora.");
+        window.location.href = "index.html";
     } catch (error) {
-        console.error('Erro ao registrar:', error);
-        alert('Erro de conexÃ£o. Tente novamente.');
+        console.error("Erro ao registrar:", error);
+        alert("Erro de conexão. Tente novamente.");
     }
 }
-
 
 function togglemode() {
     const html = document.documentElement;
@@ -58,10 +57,10 @@ function togglemode() {
     }
 }
 
-// Carrega o tema salvo quando a pÃ¡gina carregar
-window.addEventListener('DOMContentLoaded', () => {
+// Carrega o tema salvo quando a página carregar
+window.addEventListener("DOMContentLoaded", () => {
     const savedTheme = localStorage.getItem("theme");
-    
+
     if (savedTheme === "dark") {
         document.documentElement.classList.add("dark");
     } else {

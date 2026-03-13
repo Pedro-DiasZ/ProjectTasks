@@ -5,23 +5,24 @@
     <title>MyTasks</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="dashboard.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@200..800&display=swap" rel="stylesheet">
 </head>
 <body>
 
 <nav class="navbar_dash">
     <h1 class="logo">My<span>Tasks</span></h1>
 
-    <div id="switch" onclick="togglemode()">
-        <button>
-        </button>
+    <div id="switch" onclick="togglemode()" role="button" aria-label="Alternar tema" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' ') { event.preventDefault(); togglemode(); }">
+        <button></button>
         <span></span>
     </div>
 
     <div class="user_area">
-     <span id="username"></span>
-     <span id="separator">|</span>
+        <span id="username"></span>
+        <span id="separator">|</span>
         <span class="logout" onclick="logoutUser()">Sair</span>
-
     </div>
 </nav>
 
@@ -31,8 +32,8 @@
     <!-- CARD TAREFAS -->
     <section class="card tasks_card">
         <div class="add_task">
-            <input type="text" id="taskInput" placeholder="O que vocÃª precisa fazer hoje?">
-            <button id="addTaskBtn">+</button>
+            <input type="text" id="taskInput" placeholder="O que você precisa fazer hoje?">
+            <button id="addTaskBtn" aria-label="Adicionar tarefa">+</button>
         </div>
 
         <ul id="taskList">
