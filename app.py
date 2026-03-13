@@ -42,7 +42,7 @@ def handle_preflight():
 @app.route('/tasks', methods=['GET'])
 @jwt_required()
 def get_tasks():
-    user_id = get_jwt_identity()
+    user_id = int(get_jwt_identity())
     tasks = Task.query.filter_by(user_id=user_id).all()
     return jsonify([{'id': task.id, 'title': task.title, 'completed': task.completed} for task in tasks])
 
@@ -50,7 +50,7 @@ def get_tasks():
 @jwt_required()
 def post_tasks():
     data = request.get_json()
-    user_id = get_jwt_identity()
+    user_id = int(get_jwt_identity())
     if not data.get('title'):
         return jsonify({'error': 'Title is required'}), 400
     new_task = Task(title=data['title'], user_id=user_id, completed=False)
@@ -62,7 +62,7 @@ def post_tasks():
 @app.route('/tasks/<int:task_id>', methods=['DELETE'])
 @jwt_required()
 def delete_task(task_id):
-    user_id = get_jwt_identity()
+    user_id = int(get_jwt_identity())
     task = Task.query.get(task_id)
     if task is None:
         return jsonify({'error': 'Task not found'}), 404
@@ -75,7 +75,7 @@ def delete_task(task_id):
 @app.route('/tasks/<int:task_id>', methods=['PUT'])
 @jwt_required()
 def update_task(task_id):
-    user_id = get_jwt_identity()
+    user_id = int(get_jwt_identity())
     task = Task.query.get(task_id)
     if task is None:
         return jsonify({'error': 'Task not found'}), 404
@@ -122,7 +122,7 @@ def login():
     if not user or not check_password_hash(user.senha, data['senha']):
         return jsonify({'error': 'Invalid credentials'}), 401
     
-    access_token = create_access_token(identity=user.id)
+    access_token = create_access_token(identity=str(user.id))
     return jsonify({
         'access_token': access_token,
         'user': {
