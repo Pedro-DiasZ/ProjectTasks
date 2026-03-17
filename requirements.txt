@@ -4,3 +4,4 @@ Flask-CORS
 gunicorn
 flask-jwt-extended
 python-dotenv
+psycopg2-binary
