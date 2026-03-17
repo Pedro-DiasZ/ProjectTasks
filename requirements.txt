@@ -1,1 +1,6 @@
-
+Flask
+Flask-SQLAlchemy
+Flask-CORS
+gunicorn
+flask-jwt-extended
+python-dotenv
