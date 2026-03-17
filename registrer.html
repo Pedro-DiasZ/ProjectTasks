@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Criar conta | MyTasks</title>
+    <link rel="stylesheet" href="registrer.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@200..800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div id="switch" onclick="togglemode()" role="button" aria-label="Alternar tema" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' ') { event.preventDefault(); togglemode(); }">
+        <button></button>
+        <span></span>
+    </div>
+
+    <main class="container">
+        <h1 id="login">Criar conta</h1>
+
+        <form class="login_card" onsubmit="event.preventDefault(); registerUser();">
+            <label for="user">Nome de usuário</label>
+            <input type="text" id="user" placeholder="Digite seu nome de usuário" autocomplete="username">
+
+            <label for="password">Senha</label>
+            <input type="password" id="password" placeholder="Digite sua senha" autocomplete="new-password">
+
+            <label for="confirm-password">Confirmar senha</label>
+            <input type="password" id="confirm-password" placeholder="Confirme sua senha" autocomplete="new-password">
+
+            <button type="submit">Criar conta</button>
+        </form>
+        <a class="container_footer" href="index.html">Já tenho conta</a>
+    </main>
+
+<script src="registrer.js"></script>
+</body>
+</html>

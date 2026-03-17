@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login | MyTasks</title>
+
+    <link rel="stylesheet" href="style.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@200..800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div id="switch" onclick="togglemode()" role="button" aria-label="Alternar tema" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' ') { event.preventDefault(); togglemode(); }">
+        <button></button>
+        <span></span>
+    </div>
+
+    <main class="container">
+        <h1 id="login">Entrar</h1>
+
+        <form class="login_card" onsubmit="event.preventDefault(); loginUser();">
+            <label for="user">Usuário</label>
+            <input type="text" id="user" placeholder="Digite seu usuário" autocomplete="username">
+
+            <label for="password">Senha</label>
+            <input type="password" id="password" placeholder="Digite sua senha" autocomplete="current-password">
+
+            <button type="submit">Entrar</button>
+        </form>
+        <a class="container_footer" href="registrer.html">Criar conta</a>
+    </main>
+
+<script src="login.js"></script>
+</body>
+</html>
