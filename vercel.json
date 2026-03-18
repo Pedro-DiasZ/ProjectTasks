@@ -1,8 +1,9 @@
 {
+  "rootDirectory": "Front",
   "rewrites": [
-    { "source": "/", "destination": "/Front/index.html" },
-    { "source": "/login", "destination": "/Front/login.html" },
-    { "source": "/dashboard", "destination": "/Front/dashboard.html" },
-    { "source": "/registrer", "destination": "/Front/registrer.html" }
+    { "source": "/", "destination": "/index.html" },
+    { "source": "/login", "destination": "/index.html" },
+    { "source": "/dashboard", "destination": "/dashboard.html" },
+    { "source": "/registrer", "destination": "/registrer.html" }
   ]
 }
