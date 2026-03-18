@@ -13,20 +13,30 @@ load_dotenv(BASE_DIR / ".env")
 
 app = Flask(__name__)
 
-# Configuração CORS melhorada
+def require_env(name):
+    value = os.getenv(name)
+    if not value:
+        raise RuntimeError(f"Missing required environment variable: {name}")
+    return value
+
+def parse_origins(raw):
+    return [origin.strip() for origin in raw.split(",") if origin.strip()]
+
+allowed_origins = parse_origins(os.getenv("FRONTEND_ORIGINS", "https://project-tasks-ten.vercel.app,http://localhost:5500,http://127.0.0.1:5500"))
+
 CORS(app, resources={
     r"/*": {
-        "origins": ["https://project-tasks-ten.vercel.app"],
+        "origins": allowed_origins,
         "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-        "allow_headers": ["Content-Type", "Authorization"]
+        "allow_headers": ["Content-Type", "Authorization"],
     }
 })
 
-app.config['JWT_SECRET_KEY'] = os.getenv('JWT_SECRET_KEY')
-app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(hours=24)  # Token válido por 24h
+app.config['JWT_SECRET_KEY'] = require_env('JWT_SECRET_KEY')
+app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(hours=24)
 jwt = JWTManager(app)
 
-app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL')
+app.config['SQLALCHEMY_DATABASE_URI'] = require_env('DATABASE_URL')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config["SQLALCHEMY_ENGINE_OPTIONS"] = {
     "pool_pre_ping": True,
@@ -37,16 +47,20 @@ db.init_app(app)
 with app.app_context():
     db.create_all()
 
-# Handler para requisições OPTIONS (preflight CORS)
 @app.before_request
 def handle_preflight():
     if request.method == "OPTIONS":
         response = jsonify({'status': 'ok'})
-        response.headers.add("Access-Control-Allow-Origin", "*")
+        origin = request.headers.get("Origin")
+        if origin in allowed_origins:
+            response.headers.add("Access-Control-Allow-Origin", origin)
         response.headers.add("Access-Control-Allow-Headers", "Content-Type,Authorization")
         response.headers.add("Access-Control-Allow-Methods", "GET,PUT,POST,DELETE,OPTIONS")
         return response, 200
-    
+
+@app.route('/')
+def index():
+    return "Task Management API is running."
 
 @app.route('/tasks', methods=['GET'])
 @jwt_required()
@@ -66,7 +80,6 @@ def post_tasks():
     db.session.add(new_task)
     db.session.commit()
     return jsonify({'id': new_task.id, 'title': new_task.title, 'completed': new_task.completed}), 201
-
 
 @app.route('/tasks/<int:task_id>', methods=['DELETE'])
 @jwt_required()
@@ -98,49 +111,33 @@ def update_task(task_id):
     db.session.commit()
     return jsonify({'id': task.id, 'title': task.title, 'completed': task.completed}), 200
 
-
-@app.route('/')
-def index():
-    return "Task Management API is running."
-
 @app.route('/register', methods=['POST', 'OPTIONS'])
 def register():
     data = request.get_json()
-    
     if not data.get('username') or not data.get('senha'):
         return jsonify({'error': 'Username and password are required'}), 400
-    
     existing_user = User.query.filter_by(username=data['username']).first()
     if existing_user:
         return jsonify({'error': 'Username already exists'}), 409
-    
     new_user = User(username=data['username'], senha=generate_password_hash(data['senha']))
     db.session.add(new_user)
     db.session.commit()
     return jsonify({'id': new_user.id, 'username': new_user.username}), 201
 
-
 @app.route('/login', methods=['POST', 'OPTIONS'])
 def login():
     data = request.get_json()
-    
     if not data.get('username') or not data.get('senha'):
         return jsonify({'error': 'Username and password are required'}), 400
-
     user = User.query.filter_by(username=data['username']).first()
     if not user or not check_password_hash(user.senha, data['senha']):
         return jsonify({'error': 'Invalid credentials'}), 401
-    
     access_token = create_access_token(identity=str(user.id))
     return jsonify({
         'access_token': access_token,
-        'user': {
-            'id': user.id,
-            'username': user.username
-        }
+        'user': {'id': user.id, 'username': user.username}
     }), 200
-    
-# jtw resources
+
 @jwt.unauthorized_loader
 def unauthorized_callback(error):
     return jsonify({'error': 'Missing or invalid token'}), 401
@@ -153,6 +150,6 @@ def invalid_token_callback(error):
 def expired_token_callback(jwt_header, jwt_payload):
     return jsonify({'error': 'Token has expired'}), 401
 
-
 if __name__ == '__main__':
-    app.run(debug=True)
+    debug_enabled = os.getenv("FLASK_DEBUG", "false").lower() in {"1", "true", "yes"}
+    app.run(debug=debug_enabled)
