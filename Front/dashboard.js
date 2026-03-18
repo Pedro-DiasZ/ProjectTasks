@@ -43,7 +43,7 @@ function getToken() {
     return cleaned;
 }
 
-// FunÁ„o helper para adicionar token em todas as requisiÁıes
+// Fun√ß√£o helper para adicionar token em todas as requisi√ß√µes
 function getAuthHeaders() {
     const token = getToken();
     return {
@@ -52,12 +52,12 @@ function getAuthHeaders() {
     };
 }
 
-// FunÁ„o para verificar autenticaÁ„o
+// Fun√ß√£o para verificar autentica√ß√£o
 function checkAuth(response) {
     if (response.status === 401) {
         localStorage.removeItem("token");
         localStorage.removeItem("loginStorage");
-        window.location.href = "index.html";
+        window.location.href = "/";
         throw new Error("Token expirado. Redirecionando para login...");
     }
     return response;
@@ -68,7 +68,7 @@ async function loadTasks() {
         const token = getToken();
         if (!token) {
             console.warn("Sem token. Redirecionando para login...");
-            window.location.href = "index.html";
+            window.location.href = "/";
             return;
         }
 
@@ -83,7 +83,7 @@ async function loadTasks() {
         console.log("Status da resposta GET /tasks:", response.status);
 
         if (response.status === 401 || response.status === 422) {
-            let errorMsg = "Token inv·lido ou expirado.";
+            let errorMsg = "Token inv√°lido ou expirado.";
             try {
                 const errData = await response.json();
                 if (errData && errData.error) errorMsg = errData.error;
@@ -91,11 +91,11 @@ async function loadTasks() {
                 // ignore JSON parse errors
             }
             console.error(`Auth error (${response.status}):`, errorMsg);
-            alert(`Erro de autenticaÁ„o (${response.status}): ${errorMsg}\nVocÍ ser· redirecionado em 5s.`);
+            alert(`Erro de autentica√ß√£o (${response.status}): ${errorMsg}\nVoc√™ ser√° redirecionado em 5s.`);
             localStorage.removeItem("token");
             localStorage.removeItem("loginStorage");
             setTimeout(() => {
-                window.location.href = "index.html";
+                window.location.href = "/";
             }, 5000);
             return;
         }
@@ -106,8 +106,8 @@ async function loadTasks() {
         console.log("Tarefas carregadas:", tasks);
 
         if (!Array.isArray(tasks)) {
-            console.error("Resposta n„o È um array:", tasks);
-            throw new Error("Formato de resposta inv·lido");
+            console.error("Resposta n√£o √© um array:", tasks);
+            throw new Error("Formato de resposta inv√°lido");
         }
 
         list.innerHTML = "";
@@ -191,7 +191,7 @@ async function createTask() {
     try {
         const token = getToken();
         if (!token) {
-            alert("Sess„o expirada. FaÁa login novamente.");
+            alert("Sess√£o expirada. Fa√ßa login novamente.");
             logoutUser();
             return;
         }
@@ -207,7 +207,7 @@ async function createTask() {
 
         // Verificar erro 401/422
         if (response.status === 401 || response.status === 422) {
-            let errorMsg = "Token inv·lido ou expirado.";
+            let errorMsg = "Token inv√°lido ou expirado.";
             try {
                 const errData = await response.json();
                 if (errData && errData.error) errorMsg = errData.error;
@@ -215,7 +215,7 @@ async function createTask() {
                 // ignore JSON parse errors
             }
             console.error(`Auth error (${response.status}):`, errorMsg);
-            alert(`Erro de autenticaÁ„o (${response.status}): ${errorMsg}\nVocÍ ser· redirecionado em 5s.`);
+            alert(`Erro de autentica√ß√£o (${response.status}): ${errorMsg}\nVoc√™ ser√° redirecionado em 5s.`);
             localStorage.removeItem("token");
             localStorage.removeItem("loginStorage");
             setTimeout(() => {
@@ -232,10 +232,10 @@ async function createTask() {
         const task = await response.json();
         console.log("Tarefa criada com sucesso:", task);
 
-        // Validar que a tarefa tem tÌtulo
+        // Validar que a tarefa tem t√≠tulo
         if (!task || !task.title) {
-            console.error("Resposta inv·lida do servidor:", task);
-            alert("Erro: servidor retornou tarefa sem tÌtulo");
+            console.error("Resposta inv√°lida do servidor:", task);
+            alert("Erro: servidor retornou tarefa sem t√≠tulo");
             return;
         }
 
@@ -252,7 +252,7 @@ function usernameDisplay() {
     if (user) {
         const username = document.getElementById("username");
         if (username) {
-            username.textContent = `Ol·, ${user}`;
+            username.textContent = `Ola, ${user}`;
         }
     }
 }
