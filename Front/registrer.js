@@ -5,19 +5,19 @@ async function registerUser() {
     const password = document.getElementById("password").value;
     const confirmPassword = document.getElementById("confirm-password").value;
 
-    // Validações
+    // ValidaÃ§Ãµes
     if (!user || !password) {
         alert("Preencha todos os campos.");
         return;
     }
 
     if (password !== confirmPassword) {
-        alert("As senhas não coincidem.");
+        alert("As senhas nÃ£o coincidem.");
         return;
     }
 
     if (password.length < 6) {
-        alert("Senha deve ter no mínimo 6 caracteres.");
+        alert("Senha deve ter no mÃ­nimo 6 caracteres.");
         return;
     }
 
@@ -34,15 +34,15 @@ async function registerUser() {
         const data = await response.json();
 
         if (!response.ok) {
-            alert(data.error || "Erro ao registrar usuário.");
+            alert(data.error || "Erro ao registrar usuÃ¡rio.");
             return;
         }
 
-        alert("Registrado com sucesso! Faça login agora.");
-        window.location.href = "index.html";
+        alert("Registrado com sucesso! FaÃ§a login agora.");
+        window.location.href = "/";
     } catch (error) {
         console.error("Erro ao registrar:", error);
-        alert("Erro de conexão. Tente novamente.");
+        alert("Erro de conexÃ£o. Tente novamente.");
     }
 }
 
@@ -57,7 +57,7 @@ function togglemode() {
     }
 }
 
-// Carrega o tema salvo quando a página carregar
+// Carrega o tema salvo quando a pÃ¡gina carregar
 window.addEventListener("DOMContentLoaded", () => {
     const savedTheme = localStorage.getItem("theme");
 
