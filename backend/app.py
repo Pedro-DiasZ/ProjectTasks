@@ -5,6 +5,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity
 from datetime import timedelta
 import os
+import logging
 from pathlib import Path
 from dotenv import load_dotenv
 
@@ -42,6 +43,7 @@ app.config["SQLALCHEMY_ENGINE_OPTIONS"] = {
     "pool_pre_ping": True,
 }
 
+logging.basicConfig(level=logging.INFO)
 db.init_app(app)
 
 with app.app_context():
@@ -58,6 +60,15 @@ def handle_preflight():
         response.headers.add("Access-Control-Allow-Methods", "GET,PUT,POST,DELETE,OPTIONS")
         return response, 200
 
+def serialize_task(task):
+    return {
+        'id': task.id,
+        'title': task.title,
+        'completed': task.completed,
+        'created_at': task.created_at.isoformat() if task.created_at else None,
+        'updated_at': task.updated_at.isoformat() if task.updated_at else None,
+    }
+
 @app.route('/')
 def index():
     return "Task Management API is running."
@@ -67,7 +78,7 @@ def index():
 def get_tasks():
     user_id = int(get_jwt_identity())
     tasks = Task.query.filter_by(user_id=user_id).all()
-    return jsonify([{'id': task.id, 'title': task.title, 'completed': task.completed} for task in tasks])
+    return jsonify([serialize_task(task) for task in tasks])
 
 @app.route('/tasks', methods=['POST'])
 @jwt_required()
@@ -79,7 +90,7 @@ def post_tasks():
     new_task = Task(title=data['title'], user_id=user_id, completed=False)
     db.session.add(new_task)
     db.session.commit()
-    return jsonify({'id': new_task.id, 'title': new_task.title, 'completed': new_task.completed}), 201
+    return jsonify(serialize_task(new_task)), 201
 
 @app.route('/tasks/<int:task_id>', methods=['DELETE'])
 @jwt_required()
@@ -109,7 +120,7 @@ def update_task(task_id):
     if 'completed' in data:
         task.completed = data['completed']
     db.session.commit()
-    return jsonify({'id': task.id, 'title': task.title, 'completed': task.completed}), 200
+    return jsonify(serialize_task(task)), 200
 
 @app.route('/register', methods=['POST', 'OPTIONS'])
 def register():
@@ -149,6 +160,19 @@ def invalid_token_callback(error):
 @jwt.expired_token_loader
 def expired_token_callback(jwt_header, jwt_payload):
     return jsonify({'error': 'Token has expired'}), 401
+
+@app.errorhandler(404)
+def not_found_error(error):
+    return jsonify({'error': 'Not found'}), 404
+
+@app.errorhandler(405)
+def method_not_allowed_error(error):
+    return jsonify({'error': 'Method not allowed'}), 405
+
+@app.errorhandler(500)
+def internal_error(error):
+    logging.exception("Unhandled server error")
+    return jsonify({'error': 'Internal server error'}), 500
 
 if __name__ == '__main__':
     debug_enabled = os.getenv("FLASK_DEBUG", "false").lower() in {"1", "true", "yes"}
