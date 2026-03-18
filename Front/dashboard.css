@@ -183,6 +183,52 @@ body {
     gap: 16px;
 }
 
+/* TOOLBAR */
+.task_toolbar {
+    display: grid;
+    grid-template-columns: 1fr auto auto;
+    gap: 12px;
+    align-items: center;
+}
+
+.task_toolbar input {
+    padding: 10px 12px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    background: var(--card-strong);
+    color: var(--text);
+}
+
+.filters {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.filter_btn {
+    padding: 8px 10px;
+    border-radius: 10px;
+    border: 1px solid var(--action-border);
+    background: var(--action-bg);
+    color: var(--text);
+    cursor: pointer;
+    font-size: 13px;
+}
+
+.filter_btn.active {
+    background: var(--primary);
+    color: #0b1220;
+    border-color: transparent;
+}
+
+#sortSelect {
+    padding: 8px 10px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    background: var(--card-strong);
+    color: var(--text);
+}
+
 /* ADD TASK */
 .add_task {
     display: flex;
@@ -230,6 +276,17 @@ body {
     gap: 12px;
 }
 
+/* STATUS */
+.status {
+    font-size: 14px;
+    color: var(--muted);
+    min-height: 20px;
+}
+
+.status.error {
+    color: var(--delete-color);
+}
+
 .taskList,
 .task {
     display: flex;
@@ -244,9 +301,20 @@ body {
 
 .task_left {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     gap: 12px;
     flex: 1;
+}
+
+.task_text {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.task_meta {
+    font-size: 12px;
+    color: var(--muted);
 }
 
 .task_left span {
@@ -366,5 +434,9 @@ body {
     .task_left span {
         white-space: normal;
         word-break: break-word;
+    }
+
+    .task_toolbar {
+        grid-template-columns: 1fr;
     }
 }
