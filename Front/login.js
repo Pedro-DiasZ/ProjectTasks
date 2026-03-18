@@ -9,7 +9,7 @@ function togglemode() {
     }
 }
 
-// Carrega o tema salvo quando a página carregar
+// Carrega o tema salvo quando a pÃ¡gina carregar
 window.addEventListener("DOMContentLoaded", () => {
     const savedTheme = localStorage.getItem("theme");
 
@@ -28,14 +28,14 @@ async function loginUser() {
 
     console.log("Tentando fazer login com:", { user, password });
 
-    // Validações
+    // ValidaÃ§Ãµes
     if (!user || !password) {
-        alert("Preencha usuário e senha.");
+        alert("Preencha usuÃ¡rio e senha.");
         return;
     }
 
     try {
-        console.log("Enviando requisição de login para:", `${API_URL}/login`);
+        console.log("Enviando requisiÃ§Ã£o de login para:", `${API_URL}/login`);
 
         const response = await fetch(`${API_URL}/login`, {
             method: "POST",
@@ -53,7 +53,7 @@ async function loginUser() {
 
         if (!response.ok) {
             console.error("Erro no login:", data);
-            alert(data.error || "Usuário ou senha incorretos.");
+            alert(data.error || "UsuÃ¡rio ou senha incorretos.");
             return;
         }
 
@@ -64,23 +64,23 @@ async function loginUser() {
 
         // Validar se o token foi retornado
         if (!token) {
-            console.error("Servidor não retornou access_token. Dados:", data);
-            alert("Erro: servidor não retornou token de autenticação");
+            console.error("Servidor nÃ£o retornou access_token. Dados:", data);
+            alert("Erro: servidor nÃ£o retornou token de autenticaÃ§Ã£o");
             return;
         }
 
-        // Armazena token e nome de usuário
+        // Armazena token e nome de usuÃ¡rio
         console.log("Salvando token:", token);
         localStorage.setItem("token", token);
         localStorage.setItem("loginStorage", user);
 
         console.log("Token salvo:", localStorage.getItem("token"));
-        console.log("Usuário salvo:", localStorage.getItem("loginStorage"));
+        console.log("UsuÃ¡rio salvo:", localStorage.getItem("loginStorage"));
 
         alert("Login realizado com sucesso! Redirecionando...");
-        window.location.href = "dashboard.html";
+        window.location.href = "/";
     } catch (error) {
         console.error("Erro ao fazer login:", error);
-        alert("Erro de conexão: " + error.message);
+        alert("Erro de conexÃ£o: " + error.message);
     }
 }
