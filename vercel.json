@@ -3,7 +3,7 @@
     { "source": "/", "destination": "/Front/index.html" },
     { "source": "/login", "destination": "/Front/index.html" },
     { "source": "/dashboard", "destination": "/Front/dashboard.html" },
-    { "source": "/registrer", "destination": "/Front/registrer.html" },
+    { "source": "/registrer.html", "destination": "/Front/registrer.html" }
     { "source": "/style.css", "destination": "/Front/style.css" },
     { "source": "/login.js", "destination": "/Front/login.js" },
     { "source": "/dashboard.css", "destination": "/Front/dashboard.css" },
