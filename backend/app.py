@@ -16,7 +16,7 @@ app = Flask(__name__)
 # Configuração CORS melhorada
 CORS(app, resources={
     r"/*": {
-        "origins": ["*"],
+        "origins": ["https://project-tasks-ten.vercel.app"],
         "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
         "allow_headers": ["Content-Type", "Authorization"]
     }
