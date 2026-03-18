@@ -10,7 +10,7 @@
     { "source": "/dashboard.css", "destination": "/Front/dashboard.css" },
     { "source": "/dashboard.js", "destination": "/Front/dashboard.js" },
     { "source": "/registrer.css", "destination": "/Front/registrer.css" },
-    { "source": "/registrer.js", "destination": "/Front/registrer.js" }
+    { "source": "/registrer.js", "destination": "/Front/registrer.js" },
     { "source": "/assets/:file", "destination": "/assets/:file" }
   ]
 }
