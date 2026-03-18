@@ -1,0 +1,8 @@
+{
+  "rewrites": [
+    { "source": "/", "destination": "/Front/index.html" },
+    { "source": "/login", "destination": "/Front/login.html" },
+    { "source": "/dashboard", "destination": "/Front/dashboard.html" },
+    { "source": "/registrer", "destination": "/Front/registrer.html" }
+  ]
+}
