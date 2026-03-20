@@ -257,6 +257,53 @@ function usernameDisplay() {
     }
 }
 
+let accessToken = null;
+
+export async function fetchWithRefresh(url, options = {}) {
+  const res = await fetch(url, {
+    ...options,
+    credentials: "include",          
+    headers: {
+      "Content-Type": "application/json",
+      ...(accessToken ? { "Authorization": `Bearer ${accessToken}` } : {}),
+      ...options.headers,
+    },
+  });                                 
+
+  if (res.status === 401) {           
+    const refreshed = await tryRefresh();
+    if (!refreshed) {
+      redirectToLogin();
+      return res;
+    }
+    return fetch(url, {
+      ...options,
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${accessToken}`,
+        ...options.headers,
+      },
+    });
+  }
+
+  return res;
+}
+
+    async function tryRefresh() {
+        const res = await fetch("/reresh", {
+            method: "POST",
+            credentials: "include",
+    });
+    if (!res.ok) return false;
+    const data = await res.json();
+    acessToken = data.access_token;
+    return true;
+}
+
+    export function setAccessToken(token) { acessToken = token; }
+    function redirectToLogin() {window.location.href = "/"; }
+
 document.addEventListener("DOMContentLoaded", () => {
     usernameDisplay();
     loadTasks();
