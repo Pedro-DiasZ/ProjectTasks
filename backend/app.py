@@ -8,6 +8,7 @@ import os
 import logging
 from pathlib import Path
 from dotenv import load_dotenv
+from flask_jwt_extended import create_refresh_token, set_refresh_cookies, unset_jwt_cookies
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 load_dotenv(BASE_DIR / ".env")
@@ -25,16 +26,22 @@ def parse_origins(raw):
 
 allowed_origins = parse_origins(os.getenv("FRONTEND_ORIGINS", "https://project-tasks-ten.vercel.app,http://localhost:5500,http://127.0.0.1:5500"))
 
-CORS(app, resources={
-    r"/*": {
+CORS(app,
+    resources={r"/*": {
         "origins": allowed_origins,
         "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
         "allow_headers": ["Content-Type", "Authorization"],
-    }
-})
+    }},
+    supports_credentials=True   # necessário para cookies funcionarem
+)
 
-app.config['JWT_SECRET_KEY'] = require_env('JWT_SECRET_KEY')
-app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(hours=24)
+app.config["JWT_SECRET_KEY"] = os.getenv("JWT_SECRET_KEY")
+app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(minutes=15)
+app.config["JWT_REFRESH_TOKEN_EXPIRES"] = timedelta(days=7)
+app.config["JWT_TOKEN_LOCATION"] = ["headers", "cookies"]
+app.config["JWT_REFRESH_COOKIE_PATH"] = "/refresh"
+app.config["JWT_COOKIE_SECURE"] = True   # HTTPS em prod
+app.config["JWT_COOKIE_SAMESITE"] = "Lax"
 jwt = JWTManager(app)
 
 app.config['SQLALCHEMY_DATABASE_URI'] = require_env('DATABASE_URL')
@@ -49,16 +56,6 @@ db.init_app(app)
 with app.app_context():
     db.create_all()
 
-@app.before_request
-def handle_preflight():
-    if request.method == "OPTIONS":
-        response = jsonify({'status': 'ok'})
-        origin = request.headers.get("Origin")
-        if origin in allowed_origins:
-            response.headers.add("Access-Control-Allow-Origin", origin)
-        response.headers.add("Access-Control-Allow-Headers", "Content-Type,Authorization")
-        response.headers.add("Access-Control-Allow-Methods", "GET,PUT,POST,DELETE,OPTIONS")
-        return response, 200
 
 def serialize_task(task):
     return {
@@ -143,11 +140,38 @@ def login():
     user = User.query.filter_by(username=data['username']).first()
     if not user or not check_password_hash(user.senha, data['senha']):
         return jsonify({'error': 'Invalid credentials'}), 401
-    access_token = create_access_token(identity=str(user.id))
-    return jsonify({
-        'access_token': access_token,
-        'user': {'id': user.id, 'username': user.username}
-    }), 200
+
+    identity = str(user.id)
+    access_token  = create_access_token(identity=identity)
+    refresh_token = create_refresh_token(identity=identity)
+
+    resp = jsonify({'access_token': access_token})
+    set_refresh_cookies(resp, refresh_token)
+    return resp, 200
+
+@app.after_request
+def add_cors_headers(response):
+    origin = request.headers.get("Origin")
+    if origin in allowed_origins:
+        response.headers["Access-Control-Allow-Origin"] = origin
+        response.headers["Access-Control-Allow-Credentials"] = "true"
+        response.headers["Access-Control-Allow-Headers"] = "Content-Type, Authorization"
+        response.headers["Access-Control-Allow-Methods"] = "GET, POST, PUT, DELETE, OPTIONS"
+    return response
+
+@app.route('/refresh', methods=['POST'])
+@jwt_required(refresh=True)
+def refresh():
+    identity = get_jwt_identity()
+    new_acess_token = create_access_token(identity=identity)
+    return jsonify({'access_token': new_acess_token}), 200
+
+@app.route('/logout', methods=['POST'])
+@jwt_required()
+def logout():
+    resp = jsonify({'message': 'Logged out'})
+    unset_jwt_cookies(resp)
+    return resp, 200
 
 @jwt.unauthorized_loader
 def unauthorized_callback(error):
