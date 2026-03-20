@@ -39,6 +39,7 @@ async function loginUser() {
 
         const response = await fetch(`${API_URL}/login`, {
             method: "POST",
+            credentials: "include",                          // adiciona isso
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
                 username: user,
@@ -71,7 +72,7 @@ async function loginUser() {
 
         // Armazena token e nome de usuário
         console.log("Salvando token:", token);
-        localStorage.setItem("token", token);
+        window.accessToken = token;
         localStorage.setItem("loginStorage", user);
 
         console.log("Token salvo:", localStorage.getItem("token"));
