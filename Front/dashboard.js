@@ -300,6 +300,8 @@ async function tryRefresh() {
 
 export function setAccessToken(token) { accessToken = token; }
 function redirectToLogin() { window.location.href = "/"; }
+window.togglemode = togglemode;
+window.logoutUser = logoutUser;
 
 document.addEventListener("DOMContentLoaded", () => {
     usernameDisplay();
