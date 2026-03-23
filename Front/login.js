@@ -79,7 +79,7 @@ async function loginUser() {
         console.log("Usuário salvo:", localStorage.getItem("loginStorage"));
 
         alert("Login realizado com sucesso! Redirecionando...");
-        window.location.href = "/dashboard";
+        window.location.href = "/dashboard.html";
     } catch (error) {
         console.error("Erro ao fazer login:", error);
         alert("Erro de conexão: " + error.message);
