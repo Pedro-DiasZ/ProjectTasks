@@ -31,8 +31,8 @@ CORS(app,
         "origins": allowed_origins,
         "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
         "allow_headers": ["Content-Type", "Authorization"],
-    }},
-    supports_credentials=True   # necessário para cookies funcionarem
+        "supports_credentials": True
+    }}
 )
 
 app.config["JWT_SECRET_KEY"] = os.getenv("JWT_SECRET_KEY")
@@ -149,15 +149,6 @@ def login():
     set_refresh_cookies(resp, refresh_token)
     return resp, 200
 
-@app.after_request
-def add_cors_headers(response):
-    origin = request.headers.get("Origin")
-    if origin in allowed_origins:
-        response.headers["Access-Control-Allow-Origin"] = origin
-        response.headers["Access-Control-Allow-Credentials"] = "true"
-        response.headers["Access-Control-Allow-Headers"] = "Content-Type, Authorization"
-        response.headers["Access-Control-Allow-Methods"] = "GET, POST, PUT, DELETE, OPTIONS"
-    return response
 
 @app.route('/refresh', methods=['POST'])
 @jwt_required(refresh=True)
