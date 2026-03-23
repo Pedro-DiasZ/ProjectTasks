@@ -43,7 +43,6 @@ function getToken() {
     return cleaned;
 }
 
-// Função helper para adicionar token em todas as requisições
 function getAuthHeaders() {
     const token = getToken();
     return {
@@ -52,7 +51,6 @@ function getAuthHeaders() {
     };
 }
 
-// Função para verificar autenticação
 function checkAuth(response) {
     if (response.status === 401) {
         localStorage.removeItem("token");
@@ -205,7 +203,6 @@ async function createTask() {
             })
         });
 
-        // Verificar erro 401/422
         if (response.status === 401 || response.status === 422) {
             let errorMsg = "Token inválido ou expirado.";
             try {
@@ -232,7 +229,6 @@ async function createTask() {
         const task = await response.json();
         console.log("Tarefa criada com sucesso:", task);
 
-        // Validar que a tarefa tem título
         if (!task || !task.title) {
             console.error("Resposta inválida do servidor:", task);
             alert("Erro: servidor retornou tarefa sem título");
@@ -257,52 +253,53 @@ function usernameDisplay() {
     }
 }
 
+// ✅ FIX: variável com nome correto
 let accessToken = null;
 
 export async function fetchWithRefresh(url, options = {}) {
-  const res = await fetch(url, {
-    ...options,
-    credentials: "include",          
-    headers: {
-      "Content-Type": "application/json",
-      ...(accessToken ? { "Authorization": `Bearer ${accessToken}` } : {}),
-      ...options.headers,
-    },
-  });                                 
-
-  if (res.status === 401) {           
-    const refreshed = await tryRefresh();
-    if (!refreshed) {
-      redirectToLogin();
-      return res;
-    }
-    return fetch(url, {
-      ...options,
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${accessToken}`,
-        ...options.headers,
-      },
+    const res = await fetch(url, {
+        ...options,
+        credentials: "include",
+        headers: {
+            "Content-Type": "application/json",
+            ...(accessToken ? { "Authorization": `Bearer ${accessToken}` } : {}),
+            ...options.headers,
+        },
     });
-  }
 
-  return res;
+    if (res.status === 401) {
+        const refreshed = await tryRefresh();
+        if (!refreshed) {
+            redirectToLogin();
+            return res;
+        }
+        return fetch(url, {
+            ...options,
+            credentials: "include",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${accessToken}`,
+                ...options.headers,
+            },
+        });
+    }
+
+    return res;
 }
 
-    async function tryRefresh() {
-        const res = await fetch("/reresh", {
-            method: "POST",
-            credentials: "include",
+async function tryRefresh() {
+    const res = await fetch("/refresh", {
+        method: "POST",
+        credentials: "include",
     });
     if (!res.ok) return false;
     const data = await res.json();
-    acessToken = data.access_token;
+    accessToken = data.access_token; 
     return true;
 }
 
-    export function setAccessToken(token) { acessToken = token; }
-    function redirectToLogin() {window.location.href = "/"; }
+export function setAccessToken(token) { accessToken = token; }
+function redirectToLogin() { window.location.href = "/"; }
 
 document.addEventListener("DOMContentLoaded", () => {
     usernameDisplay();
