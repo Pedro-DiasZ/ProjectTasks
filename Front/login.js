@@ -72,7 +72,7 @@ async function loginUser() {
 
         // Armazena token e nome de usuário
         console.log("Salvando token:", token);
-        window.accessToken = token;
+        localStorage.setItem("access_token", token);
         localStorage.setItem("loginStorage", user);
 
         console.log("Token salvo:", localStorage.getItem("token"));
