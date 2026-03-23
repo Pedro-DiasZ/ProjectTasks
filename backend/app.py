@@ -31,8 +31,8 @@ CORS(app,
         "origins": allowed_origins,
         "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
         "allow_headers": ["Content-Type", "Authorization"],
-        "supports_credentials": True
-    }}
+    }},
+    supports_credentials=True  # ✅ correto aqui fora
 )
 
 app.config["JWT_SECRET_KEY"] = os.getenv("JWT_SECRET_KEY")
@@ -119,7 +119,7 @@ def update_task(task_id):
     db.session.commit()
     return jsonify(serialize_task(task)), 200
 
-@app.route('/register', methods=['POST', 'OPTIONS'])
+@app.route('/register', methods=['POST'])
 def register():
     data = request.get_json()
     if not data.get('username') or not data.get('senha'):
@@ -132,7 +132,7 @@ def register():
     db.session.commit()
     return jsonify({'id': new_user.id, 'username': new_user.username}), 201
 
-@app.route('/login', methods=['POST', 'OPTIONS'])
+@app.route('/login', methods=['POST'])
 def login():
     data = request.get_json()
     if not data.get('username') or not data.get('senha'):
