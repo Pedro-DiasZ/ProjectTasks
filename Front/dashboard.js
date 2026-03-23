@@ -26,7 +26,7 @@ window.addEventListener("DOMContentLoaded", () => {
 function logoutUser() {
     localStorage.removeItem("token");
     localStorage.removeItem("loginStorage");
-    window.location.href = "index.html";
+    window.location.href = "/";
 }
 
 const API_URL = "https://projecttasks.onrender.com";
